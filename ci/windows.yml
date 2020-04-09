@@ -1,0 +1,43 @@
+# Windows-specific:
+steps:
+  - checkout: self
+  # 1
+    submodules: true
+  # 2
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+  # 3
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m pip install aqtinstall
+    displayName: 'Install aqtinstall'
+  # 4
+  - script: |
+      cd $(Build.SourcesDirectory)
+      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt 4.5.3 windows desktop win64_mingw53 -m qtcore qtgui qtxml qtwidgets
+    displayName: 'Install Qt 4.5.3'
+  # 5
+  - script: |
+      cd $(Build.SourcesDirectory)
+      call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
+      $(Build.BinariesDirectory)\\Qt\\4.5.3\\mingw53_64\\bin\\qmake.exe
+    displayName: 'Run qmake'
+  # 6
+  - script: |
+      cd $(Build.SourcesDirectory)
+      call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
+      nmake release
+    displayName: 'Build!'
+
+  # 7
+  - task: CopyFiles@2
+    inputs:
+      contents: |
+        $(Build.SourcesDirectory)\\lib\\QJson.dll
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  # 8
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: Windows_release
