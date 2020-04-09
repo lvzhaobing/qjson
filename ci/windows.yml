@@ -15,13 +15,13 @@ steps:
   # 4
   - script: |
       cd $(Build.SourcesDirectory)
-      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt 5.14.1 windows desktop win64_mingw53 -m qtcore qtgui qtxml qtwidgets
+      python -m aqt install --outputdir $(Build.BinariesDirectory)\\Qt 5.14.1 windows desktop win64_mingw73 -m qtcore qtgui qtxml qtwidgets
     displayName: 'Install Qt 5.14.1'
   # 5
   - script: |
       cd $(Build.SourcesDirectory)
       call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
-      $(Build.BinariesDirectory)\\Qt\\5.14.1\\mingw53_64\\bin\\qmake.exe
+      $(Build.BinariesDirectory)\\Qt\\5.14.1\\mingw73_64\\bin\\qmake.exe
     displayName: 'Run qmake'
   # 6
   - script: |
